@@ -1,10 +1,20 @@
 provider "azurerm" {
 version = "2.6.0"
-export ARM_CLIENT_ID=$(ARM_CLIENT_ID)
+
+    
+  
+    subscription_id = "${var.subscription_id}"
+    client_id       = "${var.client_id}"
+    client_secret   = "${var.client_secret}"
+    tenant_id       = "${var.tenant_id}"
+    
+    
+    
+    #export ARM_CLIENT_ID=$(ARM_CLIENT_ID)
 #export ARM_CLIENT_CERTIFICATE_PATH="/path/to/my/client/certificate.pfx"
-export ARM_CLIENT_CERTIFICATE_PASSWORD=$(ARM_CLIENT_CERTIFICATE_PASSWORD)
-export ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID)
-export ARM_TENANT_ID=$(ARM_TENANT_ID)
+#export ARM_CLIENT_CERTIFICATE_PASSWORD=$(ARM_CLIENT_CERTIFICATE_PASSWORD)
+#export ARM_SUBSCRIPTION_ID=$(ARM_SUBSCRIPTION_ID)
+#export ARM_TENANT_ID=$(ARM_TENANT_ID)
     
 features{}    
 }
