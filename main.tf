@@ -1,13 +1,10 @@
 provider "azurerm" {
-version = "2.6.0"
-  
+version = "2.2.0"
     subscription_id = "${var.subscription_id}"
     client_id       = "${var.client_id}"
     client_secret   = "${var.client_secret}"
     tenant_id       = "${var.tenant_id}"
- 
-    
-features{}    
+features{}
 }
 
 resource "azurerm_resource_group" "Atmecs"{
@@ -31,34 +28,33 @@ resource "azurerm_network_security_group" "myterraformsecurity" {
     location            = "westus"
     resource_group_name = "${azurerm_resource_group.Atmecs.name}"
   security_rule {
-	name 			                    = "AllowSSH"
-	priority 		                  = 100
-	direction 	                  = "Inbound"
-	access 		                    = "Allow"
-	protocol 		                  = "Tcp"
-	source_port_range             = "*"
-    destination_port_range     	= "22"
-    source_address_prefix      	= "*"
-    destination_address_prefix 	= "*"
+        name                    = "AllowSSH"
+        priority                = 100
+        direction               = "Inbound"
+        access                  = "Allow"
+        protocol                = "Tcp"
+        source_port_range       = "*"
+    destination_port_range      = "22"
+    source_address_prefix       = "*"
+    destination_address_prefix  = "*"
   }
-
   security_rule {
-	name 			                    = "AllowHTTP"
-	priority		                  = 200
-	direction		                  = "Inbound"
-	access 			                  = "Allow"
-	protocol 		                  = "Tcp"
-	source_port_range             = "*"
-    destination_port_range     	= "8080"
-    source_address_prefix      	= "Internet"
-    destination_address_prefix 	= "*"
+        name                    = "AllowHTTP"
+        priority                = 200
+        direction               = "Inbound"
+        access                  = "Allow"
+        protocol                = "Tcp"
+        source_port_range       = "*"
+    destination_port_range      = "8080"
+    source_address_prefix       = "Internet"
+    destination_address_prefix  = "*"
   }
 }
 resource "azurerm_network_interface" "myterraformNIC" {
   name                = "AtmecsNICgroup"
   location            = "westus"
   resource_group_name = "${azurerm_resource_group.Atmecs.name}"
-//network_security_group_id = "${azurerm_network_security_group.myterraformsecurity.id}"
+#network_security_group_id = "${azurerm_network_security_group.myterraformsecurity.id}"
 
   ip_configuration {
     name                          = "AtmecsNICgroupconfig"
@@ -74,8 +70,7 @@ resource "azurerm_public_ip" "myterraformPIP" {
   allocation_method       = "Dynamic"
   idle_timeout_in_minutes = 30
 }
-
-resource "azurerm_virtual_machine" "myterraformvm" {    
+resource "azurerm_virtual_machine" "myterraformvm" {
 
     name                  = "AtmecsVm"
     location              = "westus"
