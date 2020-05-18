@@ -26,7 +26,6 @@ resource "azurerm_network_interface" "myterraformNIC" {
   name                = "AtmecsNICgroup"
   location            = "westus"
   resource_group_name = "${azurerm_resource_group.Atmecs.name}"
-#network_security_group_id = "${azurerm_network_security_group.myterraformsecurity.id}"
 
   ip_configuration {
     name                          = "AtmecsNICgroupconfig"
@@ -46,9 +45,9 @@ resource "azurerm_network_security_group" "myterraformsecurity" {
     name                = "AtmecsSecurity"
     location            = "westus"
     resource_group_name = "${azurerm_resource_group.Atmecs.name}"
-  security_rule {
+        security_rule {
         name                    = "AllowSSH"
-        priority                = 1000
+        priority                = 100
         direction               = "Inbound"
         access                  = "Allow"
         protocol                = "Tcp"
@@ -56,11 +55,12 @@ resource "azurerm_network_security_group" "myterraformsecurity" {
     destination_port_range      = "22"
     source_address_prefix       = "*"
     destination_address_prefix  = "*"
+
   }
 
   security_rule {
         name                    = "AllowHTTP"
-        priority                = 300
+        priority                = 200
         direction               = "Inbound"
         access                  = "Allow"
          protocol                = "Tcp"
@@ -70,8 +70,11 @@ resource "azurerm_network_security_group" "myterraformsecurity" {
     destination_address_prefix  = "*"
   }
 }
+resource "azurerm_network_interface_security_group_association" "myterraformassociation" {
+network_security_group_id = "${azurerm_network_security_group.myterraformsecurity.id}"
+network_interface_id = "${azurerm_network_interface.myterraformNIC.id}"
+}
 resource "azurerm_virtual_machine" "myterraformvm" {
-
     name                  = "AtmecsVm"
     location              = "westus"
     resource_group_name   = "${azurerm_resource_group.Atmecs.name}"
@@ -107,4 +110,5 @@ resource "azurerm_virtual_machine" "myterraformvm" {
         agent = false
     }
 }
+
 
