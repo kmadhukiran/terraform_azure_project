@@ -14,7 +14,7 @@ pipeline {
       }
       stage('terraform_plan') {
          steps {
-            sh label: '', script: 'terraform plan --terrform.tfvar'
+            sh label: '', script: 'terraform plan terrform.tfvar'
          }
       }
       stage('terraform_apply') {
