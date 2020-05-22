@@ -1,0 +1,73 @@
+node('azurevm') {
+        def gitRepo = 'https://github.com/kmadhukiran/terraform_azure_project.git'
+        currentBuild.result = "SUCCESS"
+
+    try {
+         stage('Init parameters'){
+            container('terraform-az') {
+                withCredentials([azureServicePrincipal(credentialsId: 'Azure_credentials',
+                                    subscriptionIdVariable: 'Subscription ID',
+                                    clientIdVariable: 'Client ID',
+                                    clientSecretVariable: 'Client Secret',
+                                    tenantIdVariable: 'Tenant ID')]) {
+                                    sh 'az login --service-principal -u $Client ID -p $Client Secret -t $Tenant ID'
+            }
+         }
+         stage('Checkout'){
+            container('terraform-az') {
+                // Get the terraform plan
+                git url: gitRepo, branch: 'master'
+            }
+        }
+        stage('Terraform init'){
+            container('terraform-az') {
+                // Initialize the plan 
+                withCredentials([azureServicePrincipal(credentialsId: 'Azure_credentials',
+                                    subscriptionIdVariable: 'Subscription ID',
+                                    clientIdVariable: 'Client ID',
+                                    clientSecretVariable: 'Client Secret',
+                                    tenantIdVariable: 'Tenant ID')]) {
+                                    sh 'az login --service-principal -u $Client ID -p $Client Secret -t $Tenant ID'
+                                    sh 'terraform init -input=false'
+            }
+        }
+        stage('Terraform plan'){
+            container('terraform-az') {  
+                
+                // Get the VM image ID for the VMSS  
+                withCredentials([azureServicePrincipal(credentialsId: 'Azure_credentials',
+                                    subscriptionIdVariable: 'Subscription ID',
+                                    clientIdVariable: 'Client ID',
+                                    clientSecretVariable: 'Client Secret',
+                                    tenantIdVariable: 'Tenant ID')]) {
+                                    sh 'az login --service-principal -u $Client ID -p $Client Secret -t $Tenant ID'
+                                    sh ' terraform plan'                    
+            }
+        }
+       
+        stage('Terraform apply'){
+            container('terraform-az') {
+                // Apply the plan
+                withCredentials([azureServicePrincipal(credentialsId: 'Azure_credentials',
+                                    subscriptionIdVariable: 'Subscription ID',
+                                    clientIdVariable: 'Client ID',
+                                    clientSecretVariable: 'Client Secret',
+                                    tenantIdVariable: 'Tenant ID')]) {
+                                    sh 'az login --service-principal -u $Client ID -p $Client Secret -t $Tenant ID'
+                   sh 'terraform apply -input=false -auto-approve "tfplan"'
+                 }
+        }
+        stage('Upload tfstate'){
+            container('terraform-az') {
+                // Upload the state of the plan to Azure Blob Storage
+                sh (script: "cd terraform-plans/create-vmss-from-image && tar -czvf ~/workspace/${env.JOB_NAME}/$deployment'.tar.gz' .")
+                sh "pwd"
+                azureUpload blobProperties: [cacheControl: '', contentEncoding: '', contentLanguage: '', contentType: '', detectContentType: true], containerName: '<container-name>', fileShareName: '', filesPath: '${deployment}.tar.gz', storageCredentialId: '<jenkins-storage-id>', storageType: 'blobstorage'
+                
+    }
+    catch (err) {
+        currentBuild.result = "FAILURE"
+        throw err
+    }
+    }
+}
