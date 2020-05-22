@@ -9,7 +9,7 @@ node {
                                     clientIdVariable: 'ARM_CLIENT_ID',
                                     clientSecretVariable: 'ARM_CLIENT_SECRET',
                                     tenantIdVariable: 'ARM_TENANT_ID')]){
-            sh 'echo "$CLIENT_ID"'
+            sh '$CLIENT_ID'
                                     }
          }
     
@@ -21,6 +21,8 @@ node {
                                     tenantIdVariable: 'ARM_TENANT_ID')]) {
         //sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
                           sh label: '', script: 'terraform init '
+                          sh label: '', script: 'terraform 0.12upgarde'
+                          sh label: '', script: 'terraform validate'
             }
         }
         stage('Terraform plan'){
