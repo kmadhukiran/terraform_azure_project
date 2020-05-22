@@ -20,10 +20,7 @@ node {
                                     clientSecretVariable: 'ARM_CLIENT_SECRET',
                                     tenantIdVariable: 'ARM_TENANT_ID')]) {
         //sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
-                          sh label: '', script: 'terraform init '
-                          sh label: '', script: 'terraform 0.12upgrade --auto-approve'
-                          sh label: '', script: 'terraform validate'
-            }
+                          sh label: '', script: 'terraform init '            }
         }
         stage('Terraform plan'){
             withCredentials([azureServicePrincipal(credentialsId: 'Azure_credentials',
