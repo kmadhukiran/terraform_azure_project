@@ -9,7 +9,7 @@ node {
                                     clientIdVariable: 'ARM_CLIENT_ID',
                                     clientSecretVariable: 'ARM_CLIENT_SECRET',
                                     tenantIdVariable: 'ARM_TENANT_ID')]){
-            sh '$CLIENT_ID'
+            sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
                                     }
          }
     
@@ -19,8 +19,8 @@ node {
                                     clientIdVariable: 'ARM_CLIENT_ID',
                                     clientSecretVariable: 'ARM_CLIENT_SECRET',
                                     tenantIdVariable: 'ARM_TENANT_ID')]) {
-        //sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
-                          sh label: '', script: 'terraform init '            }
+    sh 'az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET -t $ARM_TENANT_ID'
+    sh label: '', script: 'terraform init '            }
         }
         stage('Terraform plan'){
             withCredentials([azureServicePrincipal(credentialsId: 'Azure_credentials',
