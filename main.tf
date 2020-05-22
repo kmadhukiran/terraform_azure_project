@@ -1,9 +1,9 @@
 provider "azurerm" {
 version = "2.2.0"
     subscription_id = "${var.subscription_id}"
-    client_id       = "${Client ID}"
+    client_id       = "${Client_ID}"
     client_secret   = "${Client Secret}"
-    tenant_id       = "${Tenant ID}"
+    tenant_id       = "${Tenant_ID}"
 features{}
 }
 resource "azurerm_resource_group" "Atmecs"{
