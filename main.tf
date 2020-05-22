@@ -1,5 +1,9 @@
 provider "azurerm" {
-version = "2.6.0"
+version = "2.2.0"
+    subscription_id = "${ARM_SUBSCRIPTION_ID}"
+    client_id       = "${ARM_CLIENT_ID}"
+    client_secret   = "${ARM_CLIENT_SECRET}"
+    tenant_id       = "${ARM_TENANT_ID}"
     
 features{}
 }
