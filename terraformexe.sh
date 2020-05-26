@@ -15,19 +15,4 @@ pipeline {
         }
     }
 }
-         steps {
-            sh label: '', script: 'terraform init '
-         }
-      }
-      stage('terraform_plan') {
-         steps {
-            sh label: '', script: 'terraform plan'
-         }
-      }
-      stage('terraform_apply') {
-         steps {
-            sh label: '', script: 'terraform apply --auto-approve'
-         }
-      }
-   }
 }
